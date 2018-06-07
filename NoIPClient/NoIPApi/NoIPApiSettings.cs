@@ -8,8 +8,8 @@ namespace NoIPClient.NoIPApi
 {
     internal class NoIPApiSettings
     {
-        public string UserName { get; set; } = "jmarchewka";
-        public string Password { get; set; } = "jensm1985";
-        public string[] UpdateHosts { get; set; } = new string[] { "jensm.noip.me", "jensm.hopto.org" };
+        public string UserName { get; set; } = "the user name";
+        public string Password { get; set; } = "the password";
+        public string[] UpdateHosts { get; set; } = new string[] { "alist.ofyour.hosts", "asmuch.asyou.want" };
     }
 }

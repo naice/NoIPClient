@@ -11,27 +11,32 @@ namespace NoIPClient
 {
     public sealed class StartupTask : IBackgroundTask
     {
+        internal static string SETTINGS_FILE = "NoIPClient-Configuration.json";
+
         BackgroundTaskDeferral deferral = null;
 
         public void Run(IBackgroundTaskInstance taskInstance)
         {
-            // 
-            // TODO: Insert code to perform background work
-            //
-            // If you start any asynchronous methods here, prevent the task
-            // from closing prematurely by using BackgroundTaskDeferral as
-            // described in http://aka.ms/backgroundtaskdeferral
-            //
+            SETTINGS_FILE = System.IO.Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, SETTINGS_FILE);
+
+            // get deferral
             deferral = taskInstance.GetDeferral();
 
-            NoIPApi.UpdateManager.UpdateLoop(TimeSpan.FromMinutes(5), new NoIPApi.NoIPApiSettings())
+            var settingsFile = new JsonFile<NoIPApi.NoIPApiSettings>();
+            if (!settingsFile.Load(SETTINGS_FILE))
+            {
+                settingsFile.Content = new NoIPApi.NoIPApiSettings();
+                if (!settingsFile.Save(SETTINGS_FILE, Newtonsoft.Json.Formatting.Indented))
+                {
+                    throw new Exception($"Can't write initial settings file '{SETTINGS_FILE}'.");
+                }
+
+                deferral.Complete();
+                return;
+            }
+
+            NoIPApi.UpdateManager.UpdateLoop(TimeSpan.FromMinutes(5), settingsFile.Content)
                 .ContinueWith(A => deferral.Complete());
-
-            //NoIPApi.UpdateManager.Update(new NoIPApi.NoIPApiSettings())
-            //    .ContinueWith(A => {
-            //        deferral.Complete();
-            //    });
-
         }
         
     }

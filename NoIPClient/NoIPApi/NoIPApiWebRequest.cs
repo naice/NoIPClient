@@ -193,7 +193,6 @@ namespace NoIPClient.NoIPApi
             httpWebRequest.Headers[HttpRequestHeader.CacheControl] = "no-cache";
             httpWebRequest.Headers[HttpRequestHeader.Pragma] = "no-cache";
             httpWebRequest.Headers[HttpRequestHeader.Authorization] = "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(username + ":" + password));
-            //httpWebRequest.Credentials = new NetworkCredential(username, password);
 
             using (HttpWebResponse httpWebResponse = await httpWebRequest.GetResponseAsync() as HttpWebResponse)
             {
